@@ -1,0 +1,35 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    background: linear-gradient(135deg, #00c6ff, #0072ff);
+}
+
+.loginCard {
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.title {
+    margin: 0 0 8px;
+    color: var(--text-main);
+    font-size: 2rem;
+}
+
+.subtitle {
+    margin: 0 0 32px;
+    color: var(--text-secondary);
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.button {
+    width: 100%;
+}
