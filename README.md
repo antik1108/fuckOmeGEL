@@ -27,6 +27,16 @@ omegal/
 
 ## 🚀 Getting Started
 
+### ⚡️ Quick Start (Recommended)
+
+Run the entire app with a single command:
+
+```bash
+./start.sh
+```
+
+### Manual Start
+
 ### 1. Start the Backend
 
 Open a terminal and run:
