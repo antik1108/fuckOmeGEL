@@ -1,52 +1,90 @@
-.row {
+.wrapper {
     display: flex;
+    flex-direction: column;
+    gap: 4px;
     width: 100%;
-    margin-bottom: 8px;
+    animation: fadeIn 0.2s ease-out;
 }
 
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.sender {
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--zinc-600);
+    text-transform: lowercase;
+}
+
+.contentWrapper {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.content {
+    font-size: 0.875rem;
+    color: #d4d4d8;
+    line-height: 1.5;
+    word-break: break-word;
+}
+
+/* YOU (Sent by user) */
 .you {
-    justify-content: flex-end;
+    align-items: flex-end;
+    text-align: right;
 }
 
-.stranger {
-    justify-content: flex-start;
+.you .contentWrapper {
+    flex-direction: row-reverse;
 }
 
-.system {
-    justify-content: center;
-    margin: 16px 0;
+.you .content {
+    color: var(--primary-color);
+    border-right: 2px solid var(--primary-color);
+    padding-right: 12px;
+    display: inline-block;
 }
 
-.bubble {
-    max-width: 70%;
-    padding: 10px 16px;
-    border-radius: 18px;
-    font-size: 0.95rem;
-    line-height: 1.4;
-    word-wrap: break-word;
+/* STRANGER messages */
+.stranger .content {
+    color: #d4d4d8;
 }
 
-.bubble.you {
-    background-color: var(--bubble-you);
-    color: var(--text-you);
-    border-bottom-right-radius: 4px;
+/* SYSTEM MSG */
+.system .sender {
+    color: var(--primary-color);
+    opacity: 0.5;
 }
 
-.bubble.stranger {
-    background-color: var(--bubble-stranger);
-    color: var(--text-stranger);
-    border-bottom-left-radius: 4px;
+.systemWrapper {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
 }
 
-.bubble.system {
-    background-color: transparent;
-    color: var(--text-secondary);
-    font-size: 0.85rem;
-    padding: 4px 12px;
-    border-radius: 12px;
-    text-align: center;
+.systemIcon {
+    font-size: 10px;
+    color: var(--primary-color);
+    margin-top: 4px;
+}
+
+.systemText {
+    font-size: 0.875rem;
+    color: var(--primary-color);
     font-style: italic;
-    max-width: 90%;
-    border: 1px solid var(--border-light);
-    background-color: #fcfcfc;
+}
+
+/* ERROR messages */
+.error .content {
+    color: var(--error-color);
 }

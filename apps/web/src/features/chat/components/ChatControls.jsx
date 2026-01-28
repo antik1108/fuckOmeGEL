@@ -1,10 +1,9 @@
 import { useState } from 'react';
-import Button from '../../../components/ui/Button';
-import Input from '../../../components/ui/Input';
 import styles from './ChatControls.module.css';
 
 const ChatControls = ({ onSend, onNewChat, isEnabled, isWaiting }) => {
     const [input, setInput] = useState('');
+
 
     const handleSend = (e) => {
         e.preventDefault();
@@ -16,30 +15,38 @@ const ChatControls = ({ onSend, onNewChat, isEnabled, isWaiting }) => {
 
     return (
         <footer className={styles.controls}>
-            <Button
-                variant="secondary"
-                onClick={onNewChat}
-                className={styles.newButton}
-                title="Find a new partner"
-            >
-                New
-            </Button>
-
             <form onSubmit={handleSend} className={styles.form}>
-                <Input
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    placeholder={isWaiting ? "Waiting for partner..." : "Type a message..."}
-                    disabled={!isEnabled}
-                    className={styles.input}
-                />
-                <Button
+                <button
+                    type="button"
+                    onClick={onNewChat}
+                    className={styles.newButton}
+                >
+                    <span className={`material-symbols-outlined ${styles.icon} ${styles.iconLarge}`} style={{ color: 'var(--primary-color)' }}>add</span>
+                    <span className={styles.newButtonText}>NEW</span>
+                </button>
+
+                <div className={styles.inputGroup}>
+                    <div className={styles.inputWrapper}>
+                        <input
+                            type="text"
+                            value={input}
+                            onChange={(e) => setInput(e.target.value)}
+                            placeholder="Transmission..."
+                            disabled={!isEnabled}
+                            className={styles.input}
+                        />
+                    </div>
+
+                </div>
+
+                <button
                     type="submit"
                     disabled={!isEnabled || !input.trim()}
                     className={styles.sendButton}
                 >
-                    Send
-                </Button>
+                    <span className={styles.sendText}>SEND</span>
+                    <span className={`material-symbols-outlined ${styles.icon} ${styles.iconSmall}`}>send</span>
+                </button>
             </form>
         </footer>
     );

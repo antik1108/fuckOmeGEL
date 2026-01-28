@@ -32,12 +32,15 @@ omegal/
 Open a terminal and run:
 
 ```bash
+# In terminal 1:
 cd apps/backend
-# Create/Activate Virtual Environment (Optional but recommended)
-# python -m venv venv && source venv/bin/activate
-
+# Create virtual environment (if not exists)
+python3 -m venv venv 
+source venv/bin/activate
 pip install -r requirements.txt
-python src/main.py
+
+# Run the server
+uvicorn src.server:app --host 0.0.0.0 --port 8000 --reload
 ```
 The server will start at `http://localhost:8000`.
 
