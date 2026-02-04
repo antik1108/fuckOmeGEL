@@ -69,6 +69,11 @@ fi
 
 echo -e "${GREEN}🚀 Starting OmeGAL...${NC}"
 
+# Kill any existing processes on our ports
+echo -e "${BLUE}🔄 Checking for existing processes on ports 8000 and 5173...${NC}"
+lsof -ti:8000 | xargs kill -9 2>/dev/null && echo "Killed existing process on port 8000"
+lsof -ti:5173 | xargs kill -9 2>/dev/null && echo "Killed existing process on port 5173"
+
 WAIT_PIDS=""
 
 # ==========================================
@@ -124,7 +129,7 @@ if [ "$SKIP_BACKEND" -ne 1 ]; then
 
     # 3. Start Server using the venv python module to ensure correct interpreter
     echo "Starting Uvicorn..."
-    "$VENV_PYTHON" -m uvicorn src.server:app --host 0.0.0.0 --port 8000 --reload &
+    PYTHONPATH="$(pwd)" "$VENV_PYTHON" -m uvicorn src.server:app --host 0.0.0.0 --port 8000 --reload &
     BACKEND_PID=$!
     WAIT_PIDS="$BACKEND_PID"
     cd ../..
@@ -145,12 +150,12 @@ if [ "$SKIP_FRONTEND" -ne 1 ]; then
         exit 1
     fi
 
-    # 1. Install dependencies if node_modules missing
-    if [ ! -d "node_modules" ]; then
-        echo "Installing npm dependencies (first run may take a while)..."
+    # 1. Install dependencies if node_modules missing or package.json changed
+    if [ ! -d "node_modules" ] || [ "package.json" -nt "node_modules" ]; then
+        echo "Installing npm dependencies..."
         npm install || { echo -e "${RED}Failed to install frontend dependencies${NC}"; exit 1; }
     else
-        echo "node_modules found, skipping npm install (run manually if needed)"
+        echo "node_modules up to date, skipping npm install"
     fi
 
     # 2. Start Server

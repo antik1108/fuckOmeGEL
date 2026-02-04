@@ -1,20 +1,32 @@
-import styles from './Header.module.css';
+import React from 'react';
 
-const Header = ({ title, status, rightContent }) => {
-    return (
-        <header className={styles.header}>
-            <div className={styles.brand}>
-                <svg className={styles.logoSvg} height="28" viewBox="0 0 24 24" width="28" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M18.5 4.5C18.5 4.5 17 3.5 15.5 4.5C14 5.5 14.5 7 14.5 7L13.5 8" strokeLinecap="round"></path>
-                    <path d="M8.5 9.5C6 11 4 14.5 4.5 17.5C5 20.5 8 21.5 11 21C14 20.5 19 16.5 20 12.5C21 8.5 18.5 7.5 18.5 7.5L16.5 6.5C16.5 6.5 15.5 7 14.5 7.5C13.5 8 13.5 9.5 13.5 9.5L12 11" strokeLinecap="round" strokeLinejoin="round"></path>
-                    <path d="M14.5 7.5L12.5 9.5M16.5 6.5L14.5 8.5" strokeLinecap="round" strokeOpacity="0.5"></path>
-                </svg>
-                <div className={styles.divider}></div>
-                <h1 className={styles.title}>ROOM-404</h1>
-            </div>
-            {rightContent}
-        </header>
-    );
+const Header = ({ onDisconnect }) => {
+  return (
+    <header className="border-b border-slate-200 dark:border-primary/20 bg-white/50 dark:bg-black/50 backdrop-blur-md p-2 sm:p-4 flex justify-between items-center z-10">
+      <div className="flex items-center space-x-2 sm:space-x-4">
+        <span className="material-symbols-outlined text-primary text-xl sm:text-3xl cursor-pointer hover:rotate-180 transition-transform duration-500">
+          refresh
+        </span>
+        <h1 className="text-sm sm:text-xl font-bold tracking-tighter uppercase dark:text-primary">
+          ROOM-404 <span className="animate-pulse">_</span>
+        </h1>
+      </div>
+      <div className="flex items-center space-x-2 sm:space-x-6">
+        <div className="hidden lg:flex items-center space-x-2 text-xs opacity-60">
+          <span className="w-2 h-2 rounded-full bg-green-500 animate-ping"></span>
+          <span>SYSTEM_STABLE: 99.9% UPTIME</span>
+        </div>
+        <button 
+          onClick={onDisconnect}
+          className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-4 py-1 sm:py-1.5 border border-primary/40 hover:bg-primary/20 hover:border-primary transition-all text-[10px] sm:text-sm uppercase tracking-widest font-bold"
+        >
+          <span className="hidden sm:inline">Disconnect</span>
+          <span className="material-symbols-outlined text-sm">logout</span>
+        </button>
+      </div>
+    </header>
+  );
 };
 
 export default Header;
+
