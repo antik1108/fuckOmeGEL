@@ -61,6 +61,11 @@ export const useChat = () => {
                             setIsChatEnabled(false);
                             // Clean up WebRTC connection
                             socketService.closePeerConnection();
+                        } else if (data.event === 'waiting') {
+                            wasConnected.current = false;
+                            setIsPartnerConnected(false);
+                            setIsChatEnabled(false);
+                            addLog('Waiting for a new partner...', 'search');
                         }
                     }
                 } catch (e) {

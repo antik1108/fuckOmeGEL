@@ -9,8 +9,10 @@ NC='\033[0m' # No Color
 # Function to kill processes on exit
 cleanup() {
     echo -e "\n${RED}🛑 Stopping servers...${NC}"
-    # Kill all background jobs
-    kill $(jobs -p) 2>/dev/null
+    # Kill only the processes we started
+    if [ -n "${WAIT_PIDS:-}" ]; then
+        kill $WAIT_PIDS 2>/dev/null
+    fi
     exit
 }
 
@@ -67,12 +69,21 @@ if [ "$DEBUG" -eq 1 ]; then
     echo
 fi
 
-echo -e "${GREEN}🚀 Starting OmeGAL...${NC}"
+echo -e "${GREEN}🚀 Starting FuckOmeGAL...${NC}"
 
 # Kill any existing processes on our ports
 echo -e "${BLUE}🔄 Checking for existing processes on ports 8000 and 5173...${NC}"
-lsof -ti:8000 | xargs kill -9 2>/dev/null && echo "Killed existing process on port 8000"
-lsof -ti:5173 | xargs kill -9 2>/dev/null && echo "Killed existing process on port 5173"
+kill_port() {
+    local port="$1"
+    local pids
+    pids=$(lsof -ti:"$port" 2>/dev/null)
+    if [ -n "$pids" ]; then
+        kill -9 $pids 2>/dev/null && echo "Killed existing process on port $port"
+    fi
+}
+
+kill_port 8000
+kill_port 5173
 
 WAIT_PIDS=""
 

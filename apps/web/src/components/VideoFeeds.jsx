@@ -9,6 +9,9 @@ const VideoFeeds = ({ isStrangerConnected, isVideoMode = true }) => {
   const [isMuted, setIsMuted] = useState(false);
   const [isVideoOff, setIsVideoOff] = useState(false);
   const [remoteStreamActive, setRemoteStreamActive] = useState(false);
+  
+  // Store user preferences to persist across stream changes
+  const userPreferencesRef = useRef({ isMuted: false, isVideoOff: false });
 
   // Handle video mode changes
   useEffect(() => {
@@ -28,12 +31,26 @@ const VideoFeeds = ({ isStrangerConnected, isVideoMode = true }) => {
         if (localVideoRef.current) {
           localVideoRef.current.srcObject = stream;
           setHasPermission(true);
-          // Reset states when camera is set up
-          setIsMuted(false);
-          setIsVideoOff(false);
           
-          // Set local stream for WebRTC
+          // Apply user preferences to the new stream
+          const audioTracks = stream.getAudioTracks();
+          const videoTracks = stream.getVideoTracks();
+          
+          if (audioTracks.length > 0) {
+            audioTracks.forEach(track => {
+              track.enabled = !userPreferencesRef.current.isMuted;
+            });
+          }
+          
+          if (videoTracks.length > 0) {
+            videoTracks.forEach(track => {
+              track.enabled = !userPreferencesRef.current.isVideoOff;
+            });
+          }
+          
+          // Set local stream for WebRTC and update peer connection if it exists
           socketService.setLocalStream(stream);
+          socketService.updatePeerConnectionTracks(stream);
         }
       } catch (err) {
         console.error("Camera access denied", err);
@@ -78,6 +95,10 @@ const VideoFeeds = ({ isStrangerConnected, isVideoMode = true }) => {
           track.enabled = !newMutedState; // enabled = true means NOT muted
         });
         setIsMuted(newMutedState);
+        userPreferencesRef.current.isMuted = newMutedState;
+        
+        // Update peer connection with new track state
+        socketService.updatePeerConnectionTracks(streamRef.current);
       }
     }
   }, [isMuted]);
@@ -91,6 +112,10 @@ const VideoFeeds = ({ isStrangerConnected, isVideoMode = true }) => {
           track.enabled = !newVideoOffState; // enabled = true means video is ON
         });
         setIsVideoOff(newVideoOffState);
+        userPreferencesRef.current.isVideoOff = newVideoOffState;
+        
+        // Update peer connection with new track state
+        socketService.updatePeerConnectionTracks(streamRef.current);
       }
     }
   }, [isVideoOff]);

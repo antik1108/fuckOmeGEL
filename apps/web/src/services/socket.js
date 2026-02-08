@@ -217,6 +217,43 @@ class SocketService {
       this.onRemoteStream(null);
     }
   }
+
+  updatePeerConnectionTracks(newStream) {
+    // If no peer connection exists yet, just store the stream
+    if (!this.peerConnection || this.peerConnection.connectionState === 'closed') {
+      return;
+    }
+
+    try {
+      // Get the senders (tracks being sent to peer)
+      const senders = this.peerConnection.getSenders();
+      
+      // Replace each track with the corresponding track from the new stream
+      newStream.getTracks().forEach(newTrack => {
+        const sender = senders.find(s => 
+          s.track && s.track.kind === newTrack.kind
+        );
+        
+        if (sender) {
+          // Replace the old track with the new one
+          sender.replaceTrack(newTrack).catch(err => {
+            console.error('Error replacing track:', err);
+          });
+        } else {
+          // If no sender exists for this track kind, add it
+          try {
+            this.peerConnection.addTrack(newTrack, newStream);
+          } catch (err) {
+            console.error('Error adding track:', err);
+          }
+        }
+      });
+      
+      console.log('Updated peer connection tracks');
+    } catch (error) {
+      console.error('Error updating peer connection tracks:', error);
+    }
+  }
 }
 
 export const socketService = new SocketService();
